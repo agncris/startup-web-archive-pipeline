@@ -1,0 +1,43 @@
+# Research data and derived outputs: never committed
+fichas/
+texto/
+texto_descartado/
+html_crudo*/
+capturas*/
+hojas/
+paletas/
+lexico/
+exploracion/
+reportes/
+informe*
+historial/
+estado*
+.estado.lock
+bitacora.md
+ESTADO.md
+NOTAS_DE_SESION.md
+PROGRESO.md
+DIAGNOSTICO*
+postulaciones/
+dashboard/
+respaldos/
+logs*/
+*.log
+cobertura_historial/
+piloto/
+.claude/
+
+# Data files (CSV/JSON), except the public sample and requirements
+*.csv
+*.json
+!sample/indice_muestra.csv
+
+# Drive-related files
+drive_*
+*drive*
+
+# Environment and caches
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
