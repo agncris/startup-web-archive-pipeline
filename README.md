@@ -1,11 +1,21 @@
 # startup-web-archive-pipeline
 
+[![tests](https://github.com/agncris/startup-web-archive-pipeline/actions/workflows/tests.yml/badge.svg)](https://github.com/agncris/startup-web-archive-pipeline/actions/workflows/tests.yml)
+
 Python pipeline that rebuilds the historical web record of a list of startups from the Internet Archive's
 Wayback Machine. It was developed for a doctoral research project on the Start-Up Chile program (2010-2025)
 at the Doctorate in Design, Universidad de Palermo. Author: Cristian Aguilar.
 
 The code is generic: it takes a list of startups with their domains and produces, per archived snapshot, a
 screenshot, the raw HTML, extracted text, formal measurements, declared typography and lexical tables.
+
+## Status
+
+The pipeline has been run on the full Start-Up Chile cohort: 1,268 startups, 1,131 with archived snapshots,
+and a universe of 7,337 startup-year pages (2010-2025), most of them already captured. Next step (Dec 2026 -
+Feb 2027): detecting the third-party services embedded in each archived page (analytics, fonts, site builders,
+CRM, chat, AI services) to measure platform dependence and lock-in over fifteen years, and comparing a
+rule-based detector, an AI agent and a human reviewer on a hand-checked sample.
 
 ## What it does
 
@@ -60,7 +70,7 @@ Run the whole sequence with `./run_pipeline.sh`, or each script on its own, for 
 `.venv/bin/python capturar_corpus.py verificar --desde 2010 --hasta 2025`. Tests (no network needed):
 `.venv/bin/python -m unittest discover -s tests`.
 
-Data folders are created next to the scripts.
+Data folders are created next to the scripts. Code comments and `docs/` are in Spanish.
 
 ## Scripts that need earlier output
 
