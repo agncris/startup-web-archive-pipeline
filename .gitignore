@@ -33,6 +33,7 @@ piloto/
 *.csv
 *.json
 !sample/indice_muestra.csv
+!vercel.json
 
 # Drive-related files
 drive_*

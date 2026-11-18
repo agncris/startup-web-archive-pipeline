@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>startup-web-archive-pipeline</title>
+<meta name="description" content="Python pipeline that rebuilds the historical web record of a list of startups from the Internet Archive's Wayback Machine. Doctoral research project, Universidad de Palermo.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f3a5f'/%3E%3Crect x='7' y='8' width='18' height='3' fill='%23fff'/%3E%3Crect x='7' y='14.5' width='12' height='3' fill='%23fff'/%3E%3Crect x='7' y='21' width='15' height='3' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&amp;family=Inter:wght@400;500;600&amp;display=swap">
+<style>
+:root {
+  --bg: #fbfaf7;
+  --fg: #1d1d1b;
+  --muted: #5c5a55;
+  --rule: #dcd8cf;
+  --accent: #1f3a5f;
+  --code-bg: #f0ede6;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15161a;
+    --fg: #e9e7e1;
+    --muted: #a6a39b;
+    --rule: #33353b;
+    --accent: #9cb8e0;
+    --code-bg: #22242a;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+main { max-width: 760px; margin: 0 auto; padding: 4rem 1.25rem 3rem; }
+h1, h2 { font-family: var(--serif); font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; }
+h1 { font-size: clamp(1.9rem, 6vw, 2.8rem); margin: 0 0 1rem; overflow-wrap: anywhere; }
+h2 { font-size: 1.55rem; margin: 3.5rem 0 1rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); }
+p { margin: 0 0 1rem; }
+.lede { font-family: var(--serif); font-size: 1.25rem; line-height: 1.55; color: var(--fg); }
+.byline { color: var(--muted); font-size: 0.95rem; margin-top: 1.5rem; }
+.byline strong { color: var(--fg); font-weight: 600; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+code { font-family: var(--mono); font-size: 0.88em; background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+ol, ul { padding-left: 1.4rem; margin: 0 0 1rem; }
+li { margin-bottom: 0.55rem; padding-left: 0.2rem; }
+li::marker { color: var(--muted); }
+.table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 6px; margin: 0 0 1rem; }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 0.9rem; line-height: 1.5; }
+th, td { text-align: left; vertical-align: top; padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; background: var(--code-bg); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+.principles { list-style: none; padding: 0; }
+.principles li { padding: 0 0 0 1rem; border-left: 3px solid var(--rule); margin-bottom: 1rem; }
+.principles strong { font-weight: 600; }
+.links { list-style: none; padding: 0; }
+.links li { padding: 0; }
+.badge { display: inline-block; margin-top: 0.25rem; }
+.badge img { display: block; height: 20px; }
+footer { max-width: 760px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.9rem; }
+@media (max-width: 480px) {
+  main { padding-top: 2.5rem; }
+  h2 { font-size: 1.35rem; margin-top: 2.75rem; }
+  .lede { font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>startup-web-archive-pipeline</h1>
+    <p class="lede">Python pipeline that rebuilds the historical web record of a list of startups from the Internet Archive's Wayback Machine.</p>
+    <p>It was developed for a doctoral research project on the Start-Up Chile program (2010-2025). The code is generic: it takes a list of startups with their domains and produces, per archived snapshot, a screenshot, the raw HTML, extracted text, formal measurements, declared typography and lexical tables.</p>
+    <p class="byline"><strong>Cristian Aguilar</strong><br>Doctorate in Design, Universidad de Palermo</p>
+  </header>
+
+  <section id="status">
+    <h2>Status</h2>
+    <p>The pipeline has been run on the full Start-Up Chile cohort: 1,268 startups, 1,131 with archived snapshots, and a universe of 7,337 startup-year pages (2010-2025), most of them already captured.</p>
+  </section>
+
+  <section id="what-it-does">
+    <h2>What it does</h2>
+    <ol>
+      <li>Looks up which years each domain has an archived snapshot (CDX API, one HTTP 200 snapshot per year).</li>
+      <li>Captures a full-page screenshot of each snapshot with Playwright (Chromium, 1440 px wide, device scale 2, Wayback toolbar hidden, empty or black captures discarded).</li>
+      <li>Downloads the raw archived HTML (<code>id_</code> URLs, no Wayback rewriting) and extracts title, meta description, headings, buttons, action links, images and visible text into one JSON per snapshot.</li>
+      <li>Measures each capture: image size, five dominant colors, distinct colors, counts of images, forms and form fields, visible characters.</li>
+      <li>Reads the font families declared in the archived HTML and assigns them to broad typographic groups.</li>
+      <li>Builds frequency, series, shared-term and co-occurrence tables from the extracted text.</li>
+      <li>Produces contact sheets and per-year color palettes.</li>
+    </ol>
+  </section>
+
+  <section id="steps">
+    <h2>Steps and scripts</h2>
+    <div class="table-wrap" role="region" aria-label="Steps and scripts table" tabindex="0">
+      <table>
+        <thead>
+          <tr><th scope="col">Step</th><th scope="col">Script</th><th scope="col">Reads</th><th scope="col">Writes</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1. Coverage check</td><td><code>capturar_corpus.py verificar</code></td><td><code>dominios.csv</code></td><td><code>cobertura.csv</code></td></tr>
+          <tr><td>1b. Retry failed lookups</td><td><code>reverificar_errores.py</code></td><td><code>cobertura.csv</code></td><td><code>cobertura.csv</code></td></tr>
+          <tr><td>2. Screenshots</td><td><code>capturar_corpus.py capturar</code></td><td><code>dominios.csv</code>, <code>cobertura.csv</code></td><td><code>capturas/</code>, <code>indice.csv</code></td></tr>
+          <tr><td>3. HTML and text</td><td><code>extraer_texto.py</code></td><td><code>indice.csv</code></td><td><code>html_crudo/</code>, <code>texto/</code></td></tr>
+          <tr><td>4. Measurements</td><td><code>medir_piezas.py</code> (<code>--completar</code> fills values that depend on HTML/text)</td><td><code>indice.csv</code>, <code>capturas/</code></td><td><code>medidas.csv</code></td></tr>
+          <tr><td>5. Typography</td><td><code>medir_tipografia.py</code></td><td><code>indice.csv</code>, <code>html_crudo/</code></td><td><code>tipografias.csv</code>, <code>reportes/</code></td></tr>
+          <tr><td>6. Lexical tables</td><td><code>lexico.py</code></td><td><code>texto/</code></td><td><code>lexico/</code></td></tr>
+          <tr><td>7. Contact sheets, palettes</td><td><code>hojas.py</code></td><td><code>indice.csv</code>, <code>medidas.csv</code></td><td><code>hojas/</code>, <code>paletas/</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Support modules: <code>ritmo_archivo.py</code> (rate control), <code>versiones.py</code> (versioned writes), <code>estado.py</code> (optional progress file). <code>run_pipeline.sh</code> runs the steps in order.</p>
+  </section>
+
+  <section id="principles">
+    <h2>Design principles</h2>
+    <ul class="principles">
+      <li><strong>Resumable.</strong> All steps can be interrupted and run again.</li>
+      <li><strong>Append-only.</strong> Steps add to what already exists.</li>
+      <li><strong>Versioned outputs.</strong> Derived outputs keep their previous version in a <code>historial/</code> folder.</li>
+      <li><strong>Rate-limited requests.</strong> Requests to web.archive.org are rate-limited by <code>ritmo_archivo.py</code>, which backs off when the archive refuses connections and remembers the pace that worked.</li>
+      <li><strong>Traceable to each snapshot.</strong> Each page is referenced by its Wayback Machine URL and 14-digit timestamp.</li>
+    </ul>
+  </section>
+
+  <section id="next-step">
+    <h2>Next step</h2>
+    <p>Dec 2026 - Feb 2027: detecting the third-party services embedded in each archived page (analytics, fonts, site builders, CRM, chat, AI services) to measure platform dependence and lock-in over fifteen years, and comparing a rule-based detector, an AI agent and a human reviewer on a hand-checked sample.</p>
+  </section>
+
+  <section id="links">
+    <h2>Links</h2>
+    <ul class="links">
+      <li><a href="https://github.com/agncris/startup-web-archive-pipeline">Source code on GitHub</a></li>
+      <li><a href="https://github.com/agncris/startup-web-archive-pipeline/actions/workflows/tests.yml">Tests workflow (GitHub Actions)</a><br>
+        <a class="badge" href="https://github.com/agncris/startup-web-archive-pipeline/actions/workflows/tests.yml"><img src="https://github.com/agncris/startup-web-archive-pipeline/actions/workflows/tests.yml/badge.svg" alt="tests status" height="20"></a></li>
+    </ul>
+  </section>
+
+  <section id="license">
+    <h2>License</h2>
+    <p>MIT License. Copyright (c) 2026 Cristian Aguilar. See <a href="https://github.com/agncris/startup-web-archive-pipeline/blob/main/LICENSE"><code>LICENSE</code></a> in the repository.</p>
+  </section>
+</main>
+<footer>
+  <p>The repository contains code only. The archived pages are not redistributed: each one is referenced by its Wayback Machine URL and timestamp.</p>
+</footer>
+</body>
+</html>
