@@ -9,4 +9,6 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
+      - name: every script imports in a clean clone
+        run: for m in capturar_corpus extraer_texto hojas lexico medir_piezas medir_tipografia reverificar_errores ritmo_archivo versiones estado; do python -c "import $m" || exit 1; done
       - run: python -m unittest discover -s tests

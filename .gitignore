@@ -11,7 +11,9 @@ exploracion/
 reportes/
 informe*
 historial/
-estado*
+estado.js
+estado.json
+estado_*
 .estado.lock
 bitacora.md
 ESTADO.md
